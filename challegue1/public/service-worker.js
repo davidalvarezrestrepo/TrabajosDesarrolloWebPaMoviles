@@ -19,6 +19,11 @@ self.addEventListener('fetch', (event) => {
   const request = event.request;
   const url = new URL(request.url);
 
+  // Solo procesar solicitudes HTTP/HTTPS
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+    return;
+  }
+
   // HTML → Network First
   if (request.mode === 'navigate') {
     event.respondWith(networkFirst(request));
