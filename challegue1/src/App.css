@@ -16,6 +16,13 @@
     outline-offset: 2px;
   }
 }
+.hero-image {
+  width: 300px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
 
 .hero {
   position: relative;
