@@ -73,3 +73,28 @@ export default defineConfig([
 ])
 
 ```
+## Reto 02 - PWA
+
+### Aplicación desplegada
+
+La aplicación está disponible en Netlify:
+
+https://desarrollowebpamoviles.netlify.app/
+
+### Instalación en el celular
+
+#### Android
+
+1. Abrir la aplicación desde Google Chrome.
+2. Presionar el menú de tres puntos.
+3. Seleccionar "Instalar aplicación" o "Agregar a pantalla de inicio".
+4. Confirmar la instalación.
+5. La aplicación aparecerá como una aplicación instalada en el celular.
+
+#### iPhone
+
+1. Abrir la aplicación desde Safari.
+2. Presionar el botón "Compartir".
+3. Seleccionar "Agregar a pantalla de inicio".
+4. Confirmar.
+5. La aplicación aparecerá en la pantalla de inicio.
