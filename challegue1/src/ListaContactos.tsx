@@ -1,3 +1,12 @@
+import { useState } from 'react';
+import {
+  IonButton,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+} from '@ionic/react';
+
 interface Contacto {
   id: string;
   nombre: string;
@@ -11,52 +20,69 @@ interface Props {
 }
 
 function ListaContactos({ contactos, onEliminar, onAgregar }: Props) {
-  function manejarEnvio(event: React.FormEvent<HTMLFormElement>) {
+  const [nombre, setNombre] = useState('');
+  const [telefono, setTelefono] = useState('');
+
+  function manejarEnvio(event: React.FormEvent) {
     event.preventDefault();
-
-    const formulario = event.currentTarget;
-
-    const nombre = formulario.nombre.value;
-    const telefono = formulario.telefono.value;
 
     onAgregar(nombre, telefono);
 
-    formulario.reset();
+    setNombre('');
+    setTelefono('');
   }
 
   return (
     <>
       <form onSubmit={manejarEnvio}>
-        <input
-          type="text"
-          name="nombre"
-          placeholder="Nombre"
-          required
-        />
+        <IonItem>
+          <IonInput
+            label="Nombre"
+            labelPlacement="stacked"
+            type="text"
+            placeholder="Ingrese el nombre"
+            value={nombre}
+            onIonInput={(event) => setNombre(event.detail.value ?? '')}
+            required
+          />
+        </IonItem>
 
-        <input
-          type="tel"
-          name="telefono"
-          placeholder="Teléfono"
-          required
-        />
+        <IonItem>
+          <IonInput
+            label="Teléfono"
+            labelPlacement="stacked"
+            type="tel"
+            placeholder="Ingrese el teléfono"
+            value={telefono}
+            onIonInput={(event) => setTelefono(event.detail.value ?? '')}
+            required
+          />
+        </IonItem>
 
-        <button type="submit">
-          Agregar contacto
-        </button>
+        <IonButton expand="block" type="submit" className="btn-agregar">
+        Agregar contacto
+        </IonButton>
       </form>
 
-      <ul>
+      <IonList>
         {contactos.map((contacto) => (
-          <li key={contacto.id}>
-            {contacto.nombre} — {contacto.telefono}
+          <IonItem key={contacto.id}>
+            <IonLabel>
+              <h2>{contacto.nombre}</h2>
+              <p>{contacto.telefono}</p>
+            </IonLabel>
 
-            <button onClick={() => onEliminar(contacto.id)}>
+            <IonButton
+              slot="end"
+              fill="outline"
+              color="danger"
+              onClick={() => onEliminar(contacto.id)}
+            >
               Eliminar
-            </button>
-          </li>
+            </IonButton>
+          </IonItem>
         ))}
-      </ul>
+      </IonList>
     </>
   );
 }
