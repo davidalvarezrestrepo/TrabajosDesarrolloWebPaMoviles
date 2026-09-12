@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import useLogin from './useLogin';
 import Login from './Login';
 import App from './App';
@@ -22,8 +23,10 @@ function AppRoot() {
 function Pacientes() {
   const { pacientes, setPacientes } = useCargarPacientes();
 
+  // Ebuscador EN padre
+  const [busqueda, setBusqueda] = useState<string>('');
+
   function agregarPaciente(nombre: string, apellido: string, cc: string, telefono: string): string {
-    // Validar duplicado por CC
     const yaExiste = pacientes.some((p) => p.cc === cc);
 
     if (yaExiste) {
@@ -40,14 +43,33 @@ function Pacientes() {
 
     setPacientes([...pacientes, nuevo]);
 
-    return '';  // sin error
+    return '';
   }
 
+  const busquedaLimpia = busqueda.trim().toLowerCase();
+
+  const pacientesFiltrados = busquedaLimpia === ''
+    ? pacientes
+    : pacientes.filter((p) =>
+        p.nombre.toLowerCase().includes(busquedaLimpia) ||
+        p.apellido.toLowerCase().includes(busquedaLimpia) ||
+        p.cc.includes(busquedaLimpia)
+      );
+
   return (
-    <ListaPacientes
-      pacientes={pacientes}
-      onAgregar={agregarPaciente}
-    />
+    <>
+      <input
+        type="text"
+        placeholder="Buscar por nombre, apellido o CC"
+        value={busqueda}
+        onChange={(e) => setBusqueda(e.target.value)}
+      />
+
+      <ListaPacientes
+        pacientes={pacientesFiltrados}
+        onAgregar={agregarPaciente}
+      />
+    </>
   );
 }
 

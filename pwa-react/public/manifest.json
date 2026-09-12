@@ -1,6 +1,6 @@
 {
-  "name": "Mis Contactos",
-  "short_name": "Contactos",
+  "name": "MediClinic - Pacientes",
+  "short_name": "MediClinic",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
