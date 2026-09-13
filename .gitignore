@@ -1,3 +1,9 @@
 node_modules/
 dist/
 .env
+
+# Archivos binarios/comprimidos que no deberían commitearse
+*.zip
+*.rar
+*.7z
+*.tar.gz
