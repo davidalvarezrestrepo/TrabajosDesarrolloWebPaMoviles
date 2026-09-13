@@ -1,63 +1,61 @@
-import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-} from '@ionic/react'
+import { IonApp, setupIonicReact } from '@ionic/react';
+import { IonReactRouter } from '@ionic/react-router';
+import { IonRouterOutlet } from '@ionic/react';
+import { Route, Redirect } from 'react-router';
 
-import './App.css'
-import hero from './assets/hero.png'
+import ListaContactosPage from './pages/ListaContactosPage';
+import CrearContactoPage from './pages/CrearContactoPage';
+import DetalleContactoPage from './pages/DetalleContactoPage';
+import useCargarContactos from './CargarContactos';
+import Loader from './Loader';
 
-interface Props {
-  children: React.ReactNode;
-}
+import './App.css';
 
-function App({ children }: Props) {
-  return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Mis Contactos</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
-      <IonContent className="ion-padding">
-        <img
-          src={hero}
-          alt="Imagen principal de la aplicación"
-          className="hero-image"
-        />
-
-        {children}
-      </IonContent>
-    </IonPage>
-  )
-}
-
-export default App
-
-
-/*import './App.css'
-import hero from './assets/hero.png'
+setupIonicReact();
 
 function App() {
+  const {
+    contactos,
+    cargando,
+    agregarContacto,
+    eliminarContacto,
+    buscarContacto,
+  } = useCargarContactos();
+
+  if (cargando) {
+    return (
+      <IonApp>
+        <Loader />
+      </IonApp>
+    );
+  }
+
   return (
-    <>
-      <img 
-  src={hero} 
-  alt="Imagen principal de la aplicación" 
-  className="hero-image"
-/>
+    <IonApp>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route path="/lista" exact>
+            <ListaContactosPage
+              contactos={contactos}
+              onEliminar={eliminarContacto}
+            />
+          </Route>
 
-      <div className="ticks"></div>
+          <Route path="/crear" exact>
+            <CrearContactoPage onAgregar={agregarContacto} />
+          </Route>
 
-      <div className="ticks"></div>
+          <Route path="/detalle/:id" exact>
+            <DetalleContactoPage buscarContacto={buscarContacto} />
+          </Route>
 
-      <section id="spacer"></section>
-    </>
-  )
+          <Route exact path="/">
+            <Redirect to="/lista" />
+          </Route>
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
+  );
 }
 
-export default App
-*/
+export default App;
