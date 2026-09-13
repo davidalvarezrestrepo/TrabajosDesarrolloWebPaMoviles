@@ -1,29 +1,45 @@
 import {
+  IonButton,
+  IonButtons,
   IonContent,
+  IonFab,
+  IonFabButton,
   IonHeader,
+  IonIcon,
+  IonList,
   IonPage,
   IonTitle,
   IonToolbar,
-  IonList,
-  IonFab,
-  IonFabButton,
-  IonIcon,
 } from '@ionic/react';
-import { add } from 'ionicons/icons';
+import { add, logOutOutline } from 'ionicons/icons';
+import { useHistory } from 'react-router';
 import ContactoItem from '../components/ContactoItem';
 import type { Contacto } from '../CargarContactos';
 
 interface Props {
   contactos: Contacto[];
   onEliminar: (id: string) => void;
+  onLogout: () => void;
 }
 
-function ListaContactosPage({ contactos, onEliminar }: Props) {
+function ListaContactosPage({ contactos, onEliminar, onLogout }: Props) {
+  const history = useHistory();
+
+  function manejarLogout() {
+    onLogout();
+    history.replace('/login');
+  }
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar color="primary">
           <IonTitle>Mis Contactos</IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={manejarLogout} title="Cerrar sesión">
+              <IonIcon icon={logOutOutline} slot="icon-only" />
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
 

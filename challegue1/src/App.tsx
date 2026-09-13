@@ -1,13 +1,15 @@
-import { IonApp, setupIonicReact } from '@ionic/react';
+import { useState } from 'react';
+import { IonApp, setupIonicReact, IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { IonRouterOutlet } from '@ionic/react';
 import { Route, Redirect } from 'react-router';
 
 import ListaContactosPage from './pages/ListaContactosPage';
 import CrearContactoPage from './pages/CrearContactoPage';
 import DetalleContactoPage from './pages/DetalleContactoPage';
+import LoginPage from './pages/LoginPage';
 import useCargarContactos from './CargarContactos';
 import Loader from './Loader';
+import { isLogged, logout } from './auth';
 
 import './App.css';
 
@@ -22,6 +24,20 @@ function App() {
     buscarContacto,
   } = useCargarContactos();
 
+  // Estado de sesión — se inicializa leyendo localStorage
+  const [autenticado, setAutenticado] = useState<boolean>(isLogged());
+
+  function manejarLogout() {
+    logout();
+    setAutenticado(false);
+  }
+
+  // Callback que las páginas pueden llamar para refrescar el estado
+  // (por si el login pasa dentro de una página hija)
+  function refrescarAuth() {
+    setAutenticado(isLogged());
+  }
+
   if (cargando) {
     return (
       <IonApp>
@@ -34,23 +50,40 @@ function App() {
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
+          <Route path="/login" exact>
+            <LoginPage onLoginExitoso={refrescarAuth} />
+          </Route>
+
           <Route path="/lista" exact>
-            <ListaContactosPage
-              contactos={contactos}
-              onEliminar={eliminarContacto}
-            />
+            {autenticado ? (
+              <ListaContactosPage
+                contactos={contactos}
+                onEliminar={eliminarContacto}
+                onLogout={manejarLogout}
+              />
+            ) : (
+              <Redirect to="/login" />
+            )}
           </Route>
 
           <Route path="/crear" exact>
-            <CrearContactoPage onAgregar={agregarContacto} />
+            {autenticado ? (
+              <CrearContactoPage onAgregar={agregarContacto} />
+            ) : (
+              <Redirect to="/login" />
+            )}
           </Route>
 
           <Route path="/detalle/:id" exact>
-            <DetalleContactoPage buscarContacto={buscarContacto} />
+            {autenticado ? (
+              <DetalleContactoPage buscarContacto={buscarContacto} />
+            ) : (
+              <Redirect to="/login" />
+            )}
           </Route>
 
           <Route exact path="/">
-            <Redirect to="/lista" />
+            <Redirect to={autenticado ? '/lista' : '/login'} />
           </Route>
         </IonRouterOutlet>
       </IonReactRouter>
