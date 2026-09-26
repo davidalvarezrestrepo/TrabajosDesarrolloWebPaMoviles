@@ -1,11 +1,27 @@
-import React from 'react';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App';
 
-const container = document.getElementById('root');
-const root = createRoot(container!);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+import '@ionic/react/css/core.css';
+import '@ionic/react/css/normalize.css';
+import '@ionic/react/css/structure.css';
+import '@ionic/react/css/typography.css';
+import '@ionic/react/css/padding.css';
+
+import { IonApp, setupIonicReact } from '@ionic/react';
+import App from './App';
+import { AuthProvider } from './context/AuthContext';
+import { TasksProvider } from './context/TasksContext';
+
+setupIonicReact();
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <IonApp>
+      <AuthProvider>
+        <TasksProvider>
+          <App />
+        </TasksProvider>
+      </AuthProvider>
+    </IonApp>
+  </StrictMode>
 );
