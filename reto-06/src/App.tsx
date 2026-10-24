@@ -10,6 +10,7 @@ import TaskDetail from './pages/TaskDetail';
 import Contacts from './pages/Contacts';
 import AddContact from './pages/AddContact';
 import ContactDetail from './pages/ContactDetail';
+import Fruits from './pages/Fruits';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/contacts/new" element={<AddContact />} />
         <Route path="/contacts/:id" element={<ContactDetail />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/fruits" element={<Fruits />} />
       </IonRouterOutlet>
     </IonReactRouter>
   );

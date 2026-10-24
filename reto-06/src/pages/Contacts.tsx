@@ -53,6 +53,14 @@ function Contacts() {
         >
           Ir a mis tareas
         </IonButton>
+        <IonButton
+          expand="block"
+          fill="outline"
+          onClick={() => navigate('/fruits')}
+          style={{ marginTop: '1rem' }}
+        >
+          Ir a mis frutas
+        </IonButton>
 
         {cargando ? (
           <div style={{ textAlign: 'center', marginTop: '2rem' }}>
