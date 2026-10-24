@@ -1,0 +1,29 @@
+import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonButtons,
+  IonBackButton,
+} from '@ionic/react';
+
+function PushNotifications() {
+  return (
+    <IonPage>
+      <IonHeader>
+        <IonToolbar color="primary">
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/home" />
+          </IonButtons>
+          <IonTitle>PushNotifications</IonTitle>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent className="ion-padding">
+        <p>Pendiente de implementar.</p>
+      </IonContent>
+    </IonPage>
+  );
+}
+
+export default PushNotifications;
