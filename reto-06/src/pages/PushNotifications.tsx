@@ -6,6 +6,7 @@ import {
   IonContent,
   IonButtons,
   IonBackButton,
+  IonText,
 } from '@ionic/react';
 
 function PushNotifications() {
@@ -16,11 +17,16 @@ function PushNotifications() {
           <IonButtons slot="start">
             <IonBackButton defaultHref="/home" />
           </IonButtons>
-          <IonTitle>PushNotifications</IonTitle>
+          <IonTitle>Notificaciones push</IonTitle>
         </IonToolbar>
       </IonHeader>
+
       <IonContent className="ion-padding">
-        <p>Pendiente de implementar.</p>
+        <IonText>
+          <p style={{ marginTop: 0 }}>
+            sss
+          </p>
+        </IonText>
       </IonContent>
     </IonPage>
   );
