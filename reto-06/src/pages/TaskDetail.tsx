@@ -14,6 +14,8 @@ import {
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useTasksContext } from '../context/TasksContext';
+import useNetwork from '../hooks/useNetwork';
+import NetworkBanner from '../components/NetworkBanner';
 
 function TaskDetail() {
   const { id } = useParams<{ id: string }>();
@@ -22,6 +24,7 @@ function TaskDetail() {
   const [pedirConfirmacion, setPedirConfirmacion] = useState(false);
 
   const tarea = obtenerPorId(id!);
+  const { isOnline } = useNetwork();
 
   if (cargando) {
     return (
@@ -81,6 +84,7 @@ function TaskDetail() {
       </IonHeader>
 
       <IonContent className="ion-padding">
+        <NetworkBanner isOnline={isOnline} />
         <h2 style={{ marginTop: 0 }}>{tarea.titulo}</h2>
 
         <IonBadge color={tarea.completada ? 'success' : 'medium'}>
@@ -90,10 +94,11 @@ function TaskDetail() {
         <h3 style={{ marginTop: '1.5rem' }}>Descripción</h3>
         <p>{tarea.descripcion?.trim() ? tarea.descripcion : 'Sin descripción.'}</p>
 
-        <IonButton
+         <IonButton
           expand="block"
           onClick={() => completar(tarea.id)}
           style={{ marginTop: '1.5rem' }}
+          disabled={!isOnline}
         >
           {tarea.completada ? 'Marcar pendiente' : 'Marcar completada'}
         </IonButton>
@@ -102,6 +107,7 @@ function TaskDetail() {
           expand="block"
           fill="outline"
           onClick={() => navigate(`/tasks/${tarea.id}/edit`)}
+          disabled={!isOnline}
         >
           Editar
         </IonButton>
@@ -110,6 +116,7 @@ function TaskDetail() {
           expand="block"
           color="danger"
           onClick={() => setPedirConfirmacion(true)}
+          disabled={!isOnline}
         >
           Eliminar
         </IonButton>

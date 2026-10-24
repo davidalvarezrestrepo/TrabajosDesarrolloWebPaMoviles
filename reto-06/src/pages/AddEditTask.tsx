@@ -15,11 +15,14 @@ import {
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useTasksContext } from '../context/TasksContext';
+import useNetwork from '../hooks/useNetwork';
+import NetworkBanner from '../components/NetworkBanner';
 
 function AddEditTask() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { obtenerPorId, agregar, editar } = useTasksContext();
+  const { isOnline } = useNetwork();
 
   const modoEdicion = Boolean(id);
 
@@ -69,6 +72,7 @@ function AddEditTask() {
       </IonHeader>
 
       <IonContent className="ion-padding">
+        <NetworkBanner isOnline={isOnline} />
         <form onSubmit={guardar}>
           <IonItem>
             <IonInput
@@ -99,7 +103,12 @@ function AddEditTask() {
             </IonText>
           )}
 
-          <IonButton expand="block" type="submit" style={{ marginTop: '1rem' }}>
+          <IonButton
+            expand="block"
+            type="submit"
+            style={{ marginTop: '1rem' }}
+            disabled={!isOnline}
+          >
             {modoEdicion ? 'Guardar cambios' : 'Crear tarea'}
           </IonButton>
         </form>

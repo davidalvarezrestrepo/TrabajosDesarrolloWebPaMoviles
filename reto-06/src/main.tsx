@@ -11,6 +11,7 @@ import { IonApp, setupIonicReact } from '@ionic/react';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import { TasksProvider } from './context/TasksContext';
+import { ContactsProvider } from './context/ContactsContext';
 
 setupIonicReact();
 
@@ -19,7 +20,9 @@ createRoot(document.getElementById('root')!).render(
     <IonApp>
       <AuthProvider>
         <TasksProvider>
-          <App />
+          <ContactsProvider>
+            <App />
+          </ContactsProvider>
         </TasksProvider>
       </AuthProvider>
     </IonApp>

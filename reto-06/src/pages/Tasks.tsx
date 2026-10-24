@@ -15,11 +15,14 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { useTasksContext } from '../context/TasksContext';
+import useNetwork from '../hooks/useNetwork';
+import NetworkBanner from '../components/NetworkBanner';
 
 function Tasks() {
   const navigate = useNavigate();
   const { user, logout } = useAuthContext();
   const { tareas, cargando, completar } = useTasksContext();
+  const { isOnline } = useNetwork();
 
   const pendientes = tareas.filter((t) => !t.completada).length;
 
@@ -40,14 +43,24 @@ function Tasks() {
       </IonHeader>
 
       <IonContent className="ion-padding">
+        <NetworkBanner isOnline={isOnline} />
         {user && <p style={{ margin: 0 }}>Hola, {user.email}</p>}
 
         <IonButton
           expand="block"
           onClick={() => navigate('/tasks/new')}
           style={{ marginTop: '1rem' }}
+          disabled={!isOnline}
         >
           Nueva tarea
+        </IonButton>
+          <IonButton
+          expand="block"
+          fill="outline"
+          onClick={() => navigate('/contacts')}
+          style={{ marginTop: '1rem' }}
+        >
+          Ir a mis contactos
         </IonButton>
 
         {cargando ? (
@@ -71,6 +84,7 @@ function Tasks() {
                   <IonCheckbox
                     slot="start"
                     checked={tarea.completada}
+                    disabled={!isOnline}
                     onClick={(e) => e.stopPropagation()}
                     onIonChange={() => completar(tarea.id)}
                   />
