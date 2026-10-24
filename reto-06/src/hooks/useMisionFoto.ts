@@ -8,7 +8,7 @@ const ARCHIVO_EVIDENCIA = 'evidencia_mision1.jpg';
 export const useMisionFoto = () => {
   const { isCompleted, completeMission, resetMission } = useMisionesContext();
   const { photo, base64, error: errorCamara, takePhoto, limpiar } = useCamera();
-  const { writeFile } = useFilesystem();
+  const { writeFile, error: errorArchivo } = useFilesystem();
 
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +23,7 @@ export const useMisionFoto = () => {
     setGuardando(false);
 
     if (!ok) {
-      setError('No se pudo guardar la imagen.');
+      setError(errorArchivo ?? 'No se pudo guardar la imagen.');
       return;
     }
     const segundos = (Date.now() - inicioRef.current) / 1000;
