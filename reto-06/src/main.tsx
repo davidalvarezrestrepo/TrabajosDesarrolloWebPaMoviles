@@ -9,13 +9,19 @@ import '@ionic/react/css/padding.css';
 
 import { IonApp, setupIonicReact } from '@ionic/react';
 import App from './App';
+import { AuthProvider } from './context/AuthContext';
+import { MisionesProvider } from './context/MisionesContext';
 
 setupIonicReact();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <IonApp>
-      <App />
+      <AuthProvider>
+        <MisionesProvider>
+          <App />
+        </MisionesProvider>
+      </AuthProvider>
     </IonApp>
   </StrictMode>
 );

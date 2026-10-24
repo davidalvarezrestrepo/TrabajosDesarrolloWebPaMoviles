@@ -1,22 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 
 export const useHaptics = () => {
+  // Solo comprueba si hay soporte nativo. No vibra al abrir.
   const [isAvailable, setIsAvailable] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const checkAvailability = async () => {
-    try {
-      await Haptics.impact({ style: ImpactStyle.Light });
-      setIsAvailable(true);
-    } catch (err) {
-      setIsAvailable(false);
-      setError((err as Error).message);
-    }
-  };
 
   useEffect(() => {
-    checkAvailability();
+    setIsAvailable(Capacitor.isNativePlatform());
   }, []);
 
   const impact = async (style: 'light' | 'medium' | 'heavy' = 'medium') => {
@@ -44,5 +35,5 @@ export const useHaptics = () => {
     await Haptics.vibrate({ duration });
   };
 
-  return { isAvailable, error, impact, notify, vibrate };
+  return { isAvailable, impact, notify, vibrate };
 };

@@ -2,30 +2,26 @@ import { Navigate, Route } from 'react-router-dom';
 import { IonRouterOutlet } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
+import Login from './pages/Login';
+import Register from './pages/Register';
 import Home from './pages/Home';
-import Geolocation from './pages/Geolocation';
-import Camera from './pages/Camera';
-import Accelerometer from './pages/Accelerometer';
-import Device from './pages/Device';
-import Haptics from './pages/Haptics';
-import Filesystem from './pages/Filesystem';
-import LocalNotifications from './pages/LocalNotifications';
-import PushNotifications from './pages/PushNotifications';
+import MisionFoto from './pages/MisionFoto';
+import MisionMovimiento from './pages/MisionMovimiento';
+import MisionQuietud from './pages/MisionQuietud';
+import Resultados from './pages/Resultados';
 
 function App() {
   return (
     <IonReactRouter>
       <IonRouterOutlet>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/geolocation" element={<Geolocation />} />
-        <Route path="/camera" element={<Camera />} />
-        <Route path="/accelerometer" element={<Accelerometer />} />
-        <Route path="/device" element={<Device />} />
-        <Route path="/haptics" element={<Haptics />} />
-        <Route path="/filesystem" element={<Filesystem />} />
-        <Route path="/local-notifications" element={<LocalNotifications />} />
-        <Route path="/push-notifications" element={<PushNotifications />} />
-        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/mision-foto" element={<MisionFoto />} />
+        <Route path="/mision-movimiento" element={<MisionMovimiento />} />
+        <Route path="/mision-quietud" element={<MisionQuietud />} />
+        <Route path="/resultados" element={<Resultados />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
       </IonRouterOutlet>
     </IonReactRouter>
   );

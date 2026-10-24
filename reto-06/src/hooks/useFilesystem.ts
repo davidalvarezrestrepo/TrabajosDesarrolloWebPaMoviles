@@ -5,10 +5,14 @@ export const useFilesystem = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const writeFile = async (path: string, data: any, isJson = true) => {
-    setError(null);
-    setLoading(true);
-    try {
+  const writeFile = async (path: string, data: any, isJson = true, binario = false) => {
+  setError(null);
+  setLoading(true);
+  try {
+    if (binario) {
+      // Sin "encoding": Capacitor interpreta "data" como base64 y crea un archivo binario real.
+      await Filesystem.writeFile({ path, data, directory: Directory.Documents });
+    } else {
       const content = isJson ? JSON.stringify(data) : data;
       await Filesystem.writeFile({
         path,
@@ -16,14 +20,15 @@ export const useFilesystem = () => {
         directory: Directory.Documents,
         encoding: Encoding.UTF8,
       });
-      return true;
-    } catch (err) {
-      setError((err as Error).message);
-      return false;
-    } finally {
-      setLoading(false);
     }
-  };
+    return true;
+  } catch (err) {
+    setError((err as Error).message);
+    return false;
+  } finally {
+    setLoading(false);
+  }
+};
 
   const readFile = async (path: string, isJson = true) => {
     setError(null);
