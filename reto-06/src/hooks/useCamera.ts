@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 export const useCamera = () => {
-  const [photo, setPhoto] = useState<string | null>(null);   // vista previa (data URL)
-  const [base64, setBase64] = useState<string | null>(null); // contenido para guardar
+  const [photo, setPhoto] = useState<string | null>(null);   
+  const [base64, setBase64] = useState<string | null>(null); 
   const [error, setError] = useState<string | null>(null);
 
   const capturar = async (source: CameraSource) => {

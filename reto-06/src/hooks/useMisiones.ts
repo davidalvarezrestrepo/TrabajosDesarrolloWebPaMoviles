@@ -7,7 +7,6 @@ import { MISIONES, estadoInicial, type EstadoMisiones } from '../data/misiones';
 
 const CLAVE_LOCAL = 'misiones_';
 
-// Completa el estado guardado con las misiones que falten (Firebase omite lo vacío).
 const normalizar = (data: any): EstadoMisiones => {
   const base = estadoInicial();
   const guardadas: any[] = Array.isArray(data?.missions) ? data.missions : [];
@@ -19,7 +18,6 @@ const normalizar = (data: any): EstadoMisiones => {
     return m;
   });
 
-  // Los puntos se recalculan desde las misiones completadas, para no arrastrar valores viejos.
   const points = missions
     .filter((m) => m.completed)
     .reduce((total, m) => total + (MISIONES.find((x) => x.id === m.id)?.puntos ?? 0), 0);

@@ -12,15 +12,12 @@ interface Coords {
 const RADIO_TIERRA = 6371000;
 // Lecturas con precisión peor que esto (en metros) se ignoran.
 const PRECISION_MINIMA = 15;
-// Velocidad máxima razonable al caminar (m/s). Saltos más rápidos son errores del GPS.
 const VELOCIDAD_MAXIMA = 4;
-// Lecturas seguidas dentro de la distancia meta necesarias para completar la misión.
 const LECTURAS_PARA_COMPLETAR = 3;
 
 const aRadianes = (grados: number) => (grados * Math.PI) / 180;
 const claveOrigen = (uid: string) => `origen_mision2_${uid}`;
 
-// Desplazamiento en metros desde el origen: x = este/oeste, y = norte/sur.
 export const calcularDesplazamiento = (origen: Coords, actual: Coords) => {
   const y = aRadianes(actual.lat - origen.lat) * RADIO_TIERRA;
   const x = aRadianes(actual.lng - origen.lng) * RADIO_TIERRA * Math.cos(aRadianes(origen.lat));
@@ -48,14 +45,13 @@ export const useMisionMovimiento = () => {
   const distancia = desplazamiento?.distancia ?? 0;
   const avance = completada ? 1 : Math.min(1, distancia / DISTANCIA_META);
 
-  // Recupera la posición original guardada, aunque hayas cerrado la app.
   useEffect(() => {
     if (!uid) return;
     try {
       const guardado = localStorage.getItem(claveOrigen(uid));
       if (guardado) setOrigen(JSON.parse(guardado));
     } catch {
-      // Sin almacenamiento disponible: se captura de nuevo.
+      
     }
   }, [uid]);
 
@@ -79,21 +75,21 @@ export const useMisionMovimiento = () => {
             return;
           }
 
-          // 1. Descarta lecturas con poca precisión.
+          
           if (!pos || pos.coords.accuracy > PRECISION_MINIMA) return;
 
           const nuevo = { lat: pos.coords.latitude, lng: pos.coords.longitude };
           const ahora = Date.now();
           const previa = ultimaRef.current;
 
-          // 2. Descarta saltos imposibles para caminar.
+          
           if (previa) {
             const salto = calcularDesplazamiento(previa.coords, nuevo).distancia;
             const segundos = Math.max((ahora - previa.t) / 1000, 0.5);
             if (salto / segundos > VELOCIDAD_MAXIMA) return;
           }
 
-          // 3. Lectura válida.
+
           ultimaRef.current = { coords: nuevo, t: ahora };
           setActual(nuevo);
         }
@@ -104,7 +100,7 @@ export const useMisionMovimiento = () => {
     }
   }, []);
 
-  // Cuando hay origen y la misión no está completa, empieza a seguir la posición.
+
   useEffect(() => {
     if (origen && !completada) {
       inicioRef.current ??= Date.now();
@@ -112,19 +108,19 @@ export const useMisionMovimiento = () => {
     }
   }, [origen, completada, seguir]);
 
-  // Al salir de la página se detiene el GPS.
+
   useEffect(() => {
     return () => {
       detener();
     };
   }, [detener]);
 
-  // Avance en vivo para la barra de progreso del Home.
+
   useEffect(() => {
     setProgress(2, avance);
   }, [avance]);
 
-  // Completa la misión solo tras varias lecturas seguidas dentro de la distancia meta.
+
   useEffect(() => {
     if (completada || !origen || completandoRef.current) return;
     if (distancia >= DISTANCIA_META) {
@@ -150,7 +146,7 @@ export const useMisionMovimiento = () => {
         try {
           localStorage.setItem(claveOrigen(uid), JSON.stringify(nuevo));
         } catch {
-          // Si falla el guardado local, la posición sigue en memoria.
+      
         }
       }
       inicioRef.current = Date.now();
@@ -170,7 +166,7 @@ export const useMisionMovimiento = () => {
       try {
         localStorage.removeItem(claveOrigen(uid));
       } catch {
-        // Ignorar si no hay almacenamiento.
+     
       }
     }
     inicioRef.current = null;

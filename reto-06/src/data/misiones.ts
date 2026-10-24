@@ -1,9 +1,7 @@
 import { cameraOutline, locationOutline, pulseOutline } from 'ionicons/icons';
 
-// Distancia (en metros) que hay que alejarse de la posición original.
-// Para pruebas está en 10 m. Para entregar, el enunciado pide más de 30 m.
+
 export const DISTANCIA_META = 10;
-// Segundos que hay que permanecer quieto en la Misión 3.
 export const SEGUNDOS_QUIETO = 10;
 
 export interface Mision {
@@ -16,7 +14,6 @@ export interface Mision {
   icono: string;
 }
 
-// Los puntos suben a medida que avanzan las misiones: 30 + 40 + 50 = 120 (total del enunciado).
 export const MISIONES: Mision[] = [
   {
     id: 1,
@@ -49,8 +46,7 @@ export const MISIONES: Mision[] = [
 
 export const PUNTOS_MAXIMOS = MISIONES.reduce((total, m) => total + m.puntos, 0);
 
-// Estado que se guarda en local y en Firebase.
-// "seconds" es el tiempo que tardó el usuario en completar cada misión.
+
 export interface EstadoMision {
   id: number;
   completed: boolean;
@@ -67,8 +63,6 @@ export const estadoInicial = (): EstadoMisiones => ({
   missions: MISIONES.map((m) => ({ id: m.id, completed: false })),
 });
 
-// Usuarios quemados (estáticos) para el ranking de la pantalla de resultados.
-// Valores dentro del máximo de 120 puntos.
 export const RANKING_FALSO = [
   { nombre: 'Valentina', puntos: 110 },
   { nombre: 'Santiago', puntos: 80 },

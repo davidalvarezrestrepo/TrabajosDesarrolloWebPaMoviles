@@ -4,7 +4,7 @@ import { useHaptics } from './useHaptics';
 import { useMisionesContext } from './useMisionesContext';
 import { SEGUNDOS_QUIETO } from '../data/misiones';
 
-// Cambio entre dos lecturas (m/s²) a partir del cual se considera que te moviste.
+
 const UMBRAL_MOVIMIENTO = 1.5;
 
 interface Lectura {
@@ -70,7 +70,7 @@ export const useMisionQuietud = () => {
 
         const cambio =
           Math.abs(actual.x - previa.x) + Math.abs(actual.y - previa.y) + Math.abs(actual.z - previa.z);
-        // Si te mueves, el contador vuelve a cero.
+  
         if (cambio > UMBRAL_MOVIMIENTO) quietoDesdeRef.current = Date.now();
       });
 
@@ -105,7 +105,7 @@ export const useMisionQuietud = () => {
     await resetMission(3);
   };
 
-  // Al salir de la página se detienen los sensores.
+
   useEffect(() => {
     return () => {
       detener();

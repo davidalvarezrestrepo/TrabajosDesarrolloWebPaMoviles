@@ -10,7 +10,7 @@ export const useFilesystem = () => {
   setLoading(true);
   try {
     if (binario) {
-      // Sin "encoding": Capacitor interpreta "data" como base64 y crea un archivo binario real.
+      
       await Filesystem.writeFile({ path, data, directory: Directory.Documents });
     } else {
       const content = isJson ? JSON.stringify(data) : data;

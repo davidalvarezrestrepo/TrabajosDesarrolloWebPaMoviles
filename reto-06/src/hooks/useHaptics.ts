@@ -3,7 +3,7 @@ import { Capacitor } from '@capacitor/core';
 import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 
 export const useHaptics = () => {
-  // Solo comprueba si hay soporte nativo. No vibra al abrir.
+  
   const [isAvailable, setIsAvailable] = useState(true);
 
   useEffect(() => {
