@@ -1,9 +1,11 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
+import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAmKmVDHWEGdiwmidGoTaFJZNVs3nUFCi8",
   authDomain: "desarrollopamoviles.firebaseapp.com",
+  databaseURL: "https://desarrollopamoviles-default-rtdb.firebaseio.com",
   projectId: "desarrollopamoviles",
   storageBucket: "desarrollopamoviles.firebasestorage.app",
   messagingSenderId: "919169399736",
@@ -13,5 +15,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getDatabase(app);
 
-export { app, auth };
+export { app, auth, db };

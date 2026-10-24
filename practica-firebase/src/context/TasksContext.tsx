@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import useRealTimeCollection from '../hooks/useRealTimeCollection';
 
 export interface Tarea {
   id: string;
@@ -10,10 +11,10 @@ export interface Tarea {
 interface TasksContextType {
   tareas: Tarea[];
   cargando: boolean;
-  agregar: (titulo: string, descripcion?: string) => void;
-  editar: (id: string, cambios: Partial<Omit<Tarea, 'id'>>) => void;
-  eliminar: (id: string) => void;
-  completar: (id: string) => void;
+  agregar: (titulo: string, descripcion?: string) => Promise<void>;
+  editar: (id: string, cambios: Partial<Omit<Tarea, 'id'>>) => Promise<void>;
+  eliminar: (id: string) => Promise<void>;
+  completar: (id: string) => Promise<void>;
   obtenerPorId: (id: string) => Tarea | undefined;
 }
 
@@ -24,51 +25,50 @@ interface Props {
 }
 
 export function TasksProvider({ children }: Props) {
-  const [tareas, setTareas] = useState<Tarea[]>([]);
-  const [cargando, setCargando] = useState(true);
+  const { results, isPending, add, update, deleteDoc } =
+    useRealTimeCollection<Tarea>('tareas');
 
+  const tareas: Tarea[] = results;
+
+  // "cargando" solo para la primera carga, no para cada operación
+  const [primeraCarga, setPrimeraCarga] = useState(true);
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setTareas([
-        { id: '1', titulo: 'Estudiar Ionic', descripcion: 'Repasar componentes', completada: false },
-        { id: '2', titulo: 'Hacer el reto 5', descripcion: 'Firebase + contextos', completada: false },
-        { id: '3', titulo: 'Configurar Capacitor', descripcion: '', completada: true },
-      ]);
-      setCargando(false);
-    }, 800);
+    if (!isPending) setPrimeraCarga(false);
+  }, [isPending]);
 
-    return () => clearTimeout(timer);
-  }, []);
-
-  const agregar = (titulo: string, descripcion = '') => {
-    const nueva: Tarea = {
-      id: Date.now().toString(),
-      titulo,
-      descripcion,
-      completada: false,
-    };
-    setTareas((prev) => [...prev, nueva]);
+  const agregar = async (titulo: string, descripcion = '') => {
+    await add({ titulo, descripcion, completada: false });
   };
 
-  const editar = (id: string, cambios: Partial<Omit<Tarea, 'id'>>) => {
-    setTareas((prev) => prev.map((t) => (t.id === id ? { ...t, ...cambios } : t)));
+  const editar = async (id: string, cambios: Partial<Omit<Tarea, 'id'>>) => {
+    const actual = tareas.find((t) => t.id === id);
+    if (!actual) return;
+    await update(id, {
+      titulo: cambios.titulo ?? actual.titulo,
+      descripcion: cambios.descripcion ?? actual.descripcion ?? '',
+      completada: cambios.completada ?? actual.completada,
+    });
   };
 
-  const eliminar = (id: string) => {
-    setTareas((prev) => prev.filter((t) => t.id !== id));
+  const eliminar = async (id: string) => {
+    await deleteDoc(id);
   };
 
-  const completar = (id: string) => {
-    setTareas((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completada: !t.completada } : t))
-    );
+  const completar = async (id: string) => {
+    const actual = tareas.find((t) => t.id === id);
+    if (!actual) return;
+    await update(id, {
+      titulo: actual.titulo,
+      descripcion: actual.descripcion ?? '',
+      completada: !actual.completada,
+    });
   };
 
   const obtenerPorId = (id: string) => tareas.find((t) => t.id === id);
 
   return (
     <TasksContext.Provider
-      value={{ tareas, cargando, agregar, editar, eliminar, completar, obtenerPorId }}
+      value={{ tareas, cargando: primeraCarga, agregar, editar, eliminar, completar, obtenerPorId }}
     >
       {children}
     </TasksContext.Provider>

@@ -26,18 +26,20 @@ function AddEditTask() {
   const [titulo, setTitulo] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [error, setError] = useState('');
+  const [precargado, setPrecargado] = useState(false);
 
   useEffect(() => {
-    if (modoEdicion && id) {
+    if (modoEdicion && id && !precargado) {
       const tarea = obtenerPorId(id);
       if (tarea) {
         setTitulo(tarea.titulo);
         setDescripcion(tarea.descripcion ?? '');
+        setPrecargado(true);
       }
     }
-  }, [id, modoEdicion, obtenerPorId]);
+  }, [id, modoEdicion, obtenerPorId, precargado]);
 
-  const guardar = (e: React.FormEvent) => {
+  const guardar = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -47,10 +49,10 @@ function AddEditTask() {
     }
 
     if (modoEdicion && id) {
-      editar(id, { titulo: titulo.trim(), descripcion: descripcion.trim() });
+      await editar(id, { titulo: titulo.trim(), descripcion: descripcion.trim() });
       navigate(`/tasks/${id}`, { replace: true });
     } else {
-      agregar(titulo.trim(), descripcion.trim());
+      await agregar(titulo.trim(), descripcion.trim());
       navigate('/tasks', { replace: true });
     }
   };

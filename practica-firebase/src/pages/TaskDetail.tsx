@@ -9,6 +9,7 @@ import {
   IonButton,
   IonBadge,
   IonAlert,
+  IonSpinner,
 } from '@ionic/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
@@ -17,10 +18,30 @@ import { useTasksContext } from '../context/TasksContext';
 function TaskDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { obtenerPorId, completar, eliminar } = useTasksContext();
+  const { obtenerPorId, completar, eliminar, cargando } = useTasksContext();
   const [pedirConfirmacion, setPedirConfirmacion] = useState(false);
 
   const tarea = obtenerPorId(id!);
+
+  if (cargando) {
+    return (
+      <IonPage>
+        <IonHeader>
+          <IonToolbar color="primary">
+            <IonButtons slot="start">
+              <IonBackButton defaultHref="/tasks" />
+            </IonButtons>
+            <IonTitle>Detalle</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent className="ion-padding">
+          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+            <IonSpinner name="crescent" />
+          </div>
+        </IonContent>
+      </IonPage>
+    );
+  }
 
   if (!tarea) {
     return (
@@ -43,8 +64,8 @@ function TaskDetail() {
     );
   }
 
-  const confirmarEliminar = () => {
-    eliminar(tarea.id);
+  const confirmarEliminar = async () => {
+    await eliminar(tarea.id);
     navigate('/tasks', { replace: true });
   };
 
