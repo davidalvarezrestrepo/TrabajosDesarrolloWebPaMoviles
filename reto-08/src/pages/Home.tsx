@@ -1,60 +1,69 @@
+import { useState } from 'react';
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonIcon,
+  IonButton, IonContent, IonHeader, IonPage, IonSearchbar, IonSpinner, IonText, IonTitle, IonToolbar,
 } from '@ionic/react';
-import {
-  locationOutline,
-  cameraOutline,
-  phonePortraitOutline,
-  hardwareChipOutline,
-  pulseOutline,
-  folderOutline,
-  notificationsOutline,
-  cloudDownloadOutline,
-} from 'ionicons/icons';
-import { useNavigate } from 'react-router-dom';
+import GifGrid from '../components/GifGrid';
+import { useGifs } from '../hooks/useGifs';
+import './Home.css';
 
-const sensores = [
-  { nombre: 'Geolocalización', ruta: '/geolocation', icono: locationOutline },
-  { nombre: 'Cámara', ruta: '/camera', icono: cameraOutline },
-  { nombre: 'Acelerómetro', ruta: '/accelerometer', icono: pulseOutline },
-  { nombre: 'Dispositivo', ruta: '/device', icono: hardwareChipOutline },
-  { nombre: 'Vibración (Haptics)', ruta: '/haptics', icono: phonePortraitOutline },
-  { nombre: 'Archivos (Filesystem)', ruta: '/filesystem', icono: folderOutline },
-  { nombre: 'Notificaciones locales', ruta: '/local-notifications', icono: notificationsOutline },
-  { nombre: 'Notificaciones push', ruta: '/push-notifications', icono: cloudDownloadOutline },
-];
+export default function Home() {
+  const [query, setQuery] = useState('');
+  const { gifs, loading, error, hasMore, loadMore, retry } = useGifs(query);
 
-function Home() {
-  const navigate = useNavigate();
+  const termino = query.trim();
+  const titulo = termino ? `Resultados para "${termino}"` : 'Tendencias del momento';
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar color="primary">
-          <IonTitle>Sensores del teléfono</IonTitle>
+          <IonTitle>Buscador de GIFs</IonTitle>
+        </IonToolbar>
+        <IonToolbar color="primary">
+          {/* debounce: espera 600 ms sin escribir antes de buscar (cuida el límite de la API) */}
+          <IonSearchbar
+            placeholder="Busca un GIF: gatos, fútbol, feliz..."
+            debounce={600}
+            value={query}
+            onIonInput={(e) => setQuery(String(e.detail.value ?? ''))}
+          />
         </IonToolbar>
       </IonHeader>
 
       <IonContent className="ion-padding">
-        <IonList>
-          {sensores.map((s) => (
-            <IonItem key={s.ruta} button onClick={() => navigate(s.ruta)}>
-              <IonIcon icon={s.icono} slot="start" color="primary" />
-              <IonLabel>{s.nombre}</IonLabel>
-            </IonItem>
-          ))}
-        </IonList>
+        <h2 className="seccion">{titulo}</h2>
+
+        {error && (
+          <div className="estado">
+            <IonText color="danger">
+              <p>{error}</p>
+            </IonText>
+            <IonButton size="small" onClick={() => void retry()}>
+              Reintentar
+            </IonButton>
+          </div>
+        )}
+
+        {!loading && !error && gifs.length === 0 && (
+          <p className="estado">No se encontraron GIFs para esa búsqueda.</p>
+        )}
+
+        <GifGrid gifs={gifs} />
+
+        {loading && (
+          <div className="estado">
+            <IonSpinner name="crescent" />
+          </div>
+        )}
+
+        {hasMore && !loading && !error && (
+          <IonButton expand="block" fill="outline" onClick={() => void loadMore()}>
+            Cargar más
+          </IonButton>
+        )}
+
+        <p className="creditos">Powered by GIPHY</p>
       </IonContent>
     </IonPage>
   );
 }
-
-export default Home;

@@ -29,6 +29,7 @@
     "@ionic/react": "^9.0.0",
     "@ionic/react-router": "^9.0.5",
     "@supabase/supabase-js": "^2.119.2",
+    "axios": "^1.21.1",
     "dexie": "^4.4.7",
     "dexie-react-hooks": "^4.4.0",
     "firebase": "^12.19.0",
