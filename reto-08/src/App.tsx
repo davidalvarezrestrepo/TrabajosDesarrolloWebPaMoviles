@@ -11,11 +11,18 @@ import Haptics from './pages/Haptics';
 import Filesystem from './pages/Filesystem';
 import LocalNotifications from './pages/LocalNotifications';
 import PushNotifications from './pages/PushNotifications';
+import Mapa from './pages/Mapa';
+import Historial from './pages/Historial';
 
 function App() {
   return (
     <IonReactRouter>
       <IonRouterOutlet>
+        {/* Reto 08 */}
+        <Route path="/mapa" element={<Mapa />} />
+        <Route path="/historial" element={<Historial />} />
+
+        {/* Reto 07 (se conservan) */}
         <Route path="/home" element={<Home />} />
         <Route path="/geolocation" element={<Geolocation />} />
         <Route path="/camera" element={<Camera />} />
@@ -25,7 +32,8 @@ function App() {
         <Route path="/filesystem" element={<Filesystem />} />
         <Route path="/local-notifications" element={<LocalNotifications />} />
         <Route path="/push-notifications" element={<PushNotifications />} />
-        <Route path="/" element={<Navigate to="/home" replace />} />
+
+        <Route path="/" element={<Navigate to="/mapa" replace />} />
       </IonRouterOutlet>
     </IonReactRouter>
   );
